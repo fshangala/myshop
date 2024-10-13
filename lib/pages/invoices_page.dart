@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myshop/forms/invoice_form.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InvoicesPage extends StatefulWidget {
   const InvoicesPage({super.key});
@@ -9,11 +10,41 @@ class InvoicesPage extends StatefulWidget {
 }
 
 class _InvoicesPageState extends State<InvoicesPage> {
+  var invoices = <String>[];
+
+  @override
+  initState() {
+    super.initState();
+    getInvoices();
+  }
+
+  void getInvoices() {
+    SharedPreferences.getInstance().then((instance) {
+      var myinvoices = instance.getStringList("invoices") ?? [];
+      setState(() {
+        invoices = myinvoices;
+      });
+    });
+  }
+
   void addInvoiceSheet() {
     showBottomSheet(
       context: context,
       builder: (context) {
-        return const InvoiceForm();
+        return Container(
+          padding: const EdgeInsets.all(8.0),
+          child: InvoiceForm(
+            postSave: (response) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(response.message),
+              ));
+              if (response.success) {
+                Navigator.pop(context);
+                getInvoices();
+              }
+            },
+          ),
+        );
       },
     );
   }
@@ -28,6 +59,19 @@ class _InvoicesPageState extends State<InvoicesPage> {
               onPressed: () => addInvoiceSheet(),
               icon: const Icon(Icons.add),
             ),
+          ],
+        ),
+        ListView(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          children: [
+            Column(
+              children: invoices.map((elem) {
+                return ListTile(
+                  title: Text(elem),
+                );
+              }).toList(),
+            )
           ],
         ),
       ],

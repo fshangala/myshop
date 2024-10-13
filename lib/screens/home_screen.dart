@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myshop/pages/home_page.dart';
 import 'package:myshop/pages/invoices_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,24 +14,6 @@ enum Pages {
   invoices,
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text("Home"),
-      ],
-    );
-  }
-}
-
 class _HomeScreenState extends State<HomeScreen> {
   var page = Pages.home;
 
@@ -43,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return const InvoicesPage();
 
       default:
-        return Column();
+        return const Column();
     }
   }
 
