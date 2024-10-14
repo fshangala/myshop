@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myshop/dialogs/invoice_dialog.dart';
 import 'package:myshop/forms/invoice_form.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -69,6 +70,14 @@ class _InvoicesPageState extends State<InvoicesPage> {
               children: invoices.map((elem) {
                 return ListTile(
                   title: Text(elem),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return InvoiceDialog(invoiceNumber: elem);
+                      },
+                    );
+                  },
                 );
               }).toList(),
             )
