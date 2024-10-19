@@ -4,9 +4,14 @@ import 'package:myshop/sdk/sdk_response.dart';
 
 class InvoiceItemForm extends StatefulWidget {
   final InvoiceItem invoiceItem;
+  final void Function(SdkResponse<InvoiceItem> response) postSave;
+  final void Function(SdkResponse<InvoiceItem?> response) postDelete;
+
   const InvoiceItemForm({
     super.key,
     required this.invoiceItem,
+    required this.postSave,
+    required this.postDelete,
   });
 
   @override
@@ -71,7 +76,22 @@ class _InvoiceItemFormState extends State<InvoiceItemForm> {
     );
   }
 
-  void saveItem() {}
+  void saveItem() {
+    widget.invoiceItem.quantity = int.parse(quantityController.text);
+    widget.invoiceItem.description = descriptionController.text;
+    widget.invoiceItem.unitPrice = double.parse(unitPriceController.text);
+    widget.invoiceItem.save().then((response) {
+      if (response.success) {
+        widget.postSave(response);
+      }
+    });
+  }
+
+  void deleteItem() {
+    widget.invoiceItem.delete().then((response) {
+      widget.postDelete(response);
+    });
+  }
 }
 
 class AddInvoiceItemForm extends StatefulWidget {

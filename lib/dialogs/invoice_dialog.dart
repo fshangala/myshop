@@ -20,6 +20,12 @@ class _InvoiceDialogState extends State<InvoiceDialog> {
     invoice = Invoice.fromInvoiceNumber(widget.invoiceNumber);
   }
 
+  void reload() {
+    setState(() {
+      invoice = Invoice.fromInvoiceNumber(widget.invoiceNumber);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -131,10 +137,7 @@ class _InvoiceDialogState extends State<InvoiceDialog> {
                     ));
                     if (response.success) {
                       Navigator.pop(context);
-                      setState(() {
-                        invoice =
-                            Invoice.fromInvoiceNumber(widget.invoiceNumber);
-                      });
+                      reload();
                     }
                   },
                 ),
@@ -148,12 +151,33 @@ class _InvoiceDialogState extends State<InvoiceDialog> {
 
   void showEditItemDialog(InvoiceItem invoiceItem) {
     showDialog(
-        context: context,
-        builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(8),
-            child: EditInvoiceItemDialog(invoiceItem: invoiceItem),
-          );
-        });
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(8),
+          child: EditInvoiceItemDialog(
+            invoiceItem: invoiceItem,
+            postSave: (response) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(response.message),
+              ));
+              if (response.success) {
+                Navigator.pop(context);
+                reload();
+              }
+            },
+            postDelete: (response) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(response.message),
+              ));
+              if (response.success) {
+                Navigator.pop(context);
+                reload();
+              }
+            },
+          ),
+        );
+      },
+    );
   }
 }

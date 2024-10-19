@@ -87,7 +87,7 @@ class InvoiceItem {
     required double unitPrice,
   }) async {
     var sharedPref = await SharedPreferences.getInstance();
-    var invoiceItemHash = description.replaceAll(" ", "").toLowerCase();
+    var invoiceItemHash = description.replaceAll(" ", "_").toLowerCase();
     var invoiceItems =
         sharedPref.getStringList("$invoiceNumber.invoiceItems") ?? [];
     sharedPref.setInt("$invoiceNumber.$invoiceItemHash.quantity", quantity);
@@ -109,18 +109,37 @@ class InvoiceItem {
   }
 
   Future<SdkResponse<InvoiceItem>> save() async {
-    var invoiceItemResponse = await InvoiceItem.create(
+    var sharedPref = await SharedPreferences.getInstance();
+    sharedPref.setInt("$invoiceNumber.$invoiceItemHash.quantity", quantity);
+    sharedPref.setString(
+        "$invoiceNumber.$invoiceItemHash.description", description);
+    sharedPref.setDouble(
+        "$invoiceNumber.$invoiceItemHash.unitPrice", unitPrice);
+    var invoiceItem = await InvoiceItem.fromInvoiceItemHash(
       invoiceNumber: invoiceNumber,
-      quantity: quantity,
-      description: description,
-      unitPrice: unitPrice,
+      invoiceItemHash: invoiceItemHash,
     );
-    if (invoiceItemResponse.success) {
-      invoiceItemResponse.message = "Item successfully updated!";
-      return invoiceItemResponse;
-    } else {
-      return invoiceItemResponse;
-    }
+    return SdkResponse(
+      success: true,
+      message: "Invoice item successfully updated!",
+      data: invoiceItem,
+    );
+  }
+
+  Future<SdkResponse<InvoiceItem?>> delete() async {
+    var sharedPref = await SharedPreferences.getInstance();
+    var invoiceItems =
+        sharedPref.getStringList("$invoiceNumber.invoiceItems") ?? [];
+    var newItems =
+        invoiceItems.where((value) => value != invoiceItemHash).toList();
+    sharedPref.remove("$invoiceNumber.$invoiceItemHash.quantity");
+    sharedPref.remove("$invoiceNumber.$invoiceItemHash.description");
+    sharedPref.remove("$invoiceNumber.$invoiceItemHash.unitPrice");
+    sharedPref.setStringList("$invoiceNumber.invoiceItems", newItems);
+    return SdkResponse(
+      success: true,
+      message: "Invoice item successfully deleted!",
+    );
   }
 }
 
