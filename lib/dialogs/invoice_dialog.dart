@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myshop/dialogs/edit_invoice_item_dialog.dart';
 import 'package:myshop/forms/invoice_item_form.dart';
 import 'package:myshop/sdk/invoice.dart';
 
@@ -55,6 +56,12 @@ class _InvoiceDialogState extends State<InvoiceDialog> {
     var rows = invoice.invoiceItems
         .map((invoiceItem) => DataRow(
               cells: [
+                DataCell(
+                  const Icon(Icons.edit),
+                  onTap: () {
+                    showEditItemDialog(invoiceItem);
+                  },
+                ),
                 DataCell(Text(invoiceItem.quantity.toString())),
                 DataCell(Text(invoiceItem.description)),
                 DataCell(Text(invoiceItem.unitPrice.toString())),
@@ -64,6 +71,7 @@ class _InvoiceDialogState extends State<InvoiceDialog> {
         .toList();
     rows.add(DataRow(
       cells: [
+        const DataCell(Text("")),
         const DataCell(Text("")),
         const DataCell(Text("")),
         const DataCell(Text("")),
@@ -84,6 +92,7 @@ class _InvoiceDialogState extends State<InvoiceDialog> {
         ),
         DataTable(
           columns: const [
+            DataColumn(label: Text(""), numeric: true),
             DataColumn(label: Text("Qty"), numeric: true),
             DataColumn(label: Text("Description")),
             DataColumn(label: Text("@"), numeric: true),
@@ -135,5 +144,16 @@ class _InvoiceDialogState extends State<InvoiceDialog> {
         );
       },
     );
+  }
+
+  void showEditItemDialog(InvoiceItem invoiceItem) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(8),
+            child: EditInvoiceItemDialog(invoiceItem: invoiceItem),
+          );
+        });
   }
 }

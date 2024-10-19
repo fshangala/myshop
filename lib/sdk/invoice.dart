@@ -107,6 +107,21 @@ class InvoiceItem {
       data: invoiceItem,
     );
   }
+
+  Future<SdkResponse<InvoiceItem>> save() async {
+    var invoiceItemResponse = await InvoiceItem.create(
+      invoiceNumber: invoiceNumber,
+      quantity: quantity,
+      description: description,
+      unitPrice: unitPrice,
+    );
+    if (invoiceItemResponse.success) {
+      invoiceItemResponse.message = "Item successfully updated!";
+      return invoiceItemResponse;
+    } else {
+      return invoiceItemResponse;
+    }
+  }
 }
 
 class Invoice {
