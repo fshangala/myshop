@@ -74,7 +74,17 @@ class _InvoicesPageState extends State<InvoicesPage> {
                     showDialog(
                       context: context,
                       builder: (context) {
-                        return InvoiceDialog(invoiceNumber: elem);
+                        return InvoiceDialog(
+                          invoiceNumber: elem,
+                          postDelete: (response) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(response.message)));
+                            if (response.success) {
+                              Navigator.pop(context);
+                              getInvoices();
+                            }
+                          },
+                        );
                       },
                     );
                   },

@@ -165,6 +165,22 @@ class Invoice {
     return amount;
   }
 
+  Future<SdkResponse<Invoice>> delete() async {
+    var sharedPref = await SharedPreferences.getInstance();
+    var invoices = sharedPref.getStringList("invoices") ?? [];
+    var filteredList =
+        invoices.where((value) => value != invoiceNumber.toString()).toList();
+
+    sharedPref.remove("$invoiceNumber.customerName");
+    sharedPref.remove("$invoiceNumber.date");
+    sharedPref.remove("$invoiceNumber.paymentMethod");
+    sharedPref.setStringList("invoices", filteredList);
+    return SdkResponse(
+      success: true,
+      message: "Invoice deleted!",
+    );
+  }
+
   static Future<Invoice?> fromInvoiceNumber(String invoiceNumber) async {
     var sharedPref = await SharedPreferences.getInstance();
     var customerName =
