@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:myshop/dialogs/edit_invoice_item_dialog.dart';
 import 'package:myshop/forms/invoice_item_form.dart';
 import 'package:myshop/sdk/invoice.dart';
+import 'package:myshop/sdk/sdk_response.dart';
 
 class InvoiceDialog extends StatefulWidget {
   final String invoiceNumber;
-  const InvoiceDialog({super.key, required this.invoiceNumber});
+  final void Function(SdkResponse<Invoice> response) postDelete;
+  const InvoiceDialog({
+    super.key,
+    required this.invoiceNumber,
+    required this.postDelete,
+  });
 
   @override
   State<StatefulWidget> createState() => _InvoiceDialogState();
@@ -124,8 +130,20 @@ class _InvoiceDialogState extends State<InvoiceDialog> {
           },
           child: const Text("Add Item"),
         ),
+        ElevatedButton(
+          onPressed: () {
+            deleteInvoice(invoice);
+          },
+          child: const Text("Delete Invoice"),
+        ),
       ],
     );
+  }
+
+  void deleteInvoice(Invoice invoice) {
+    invoice.delete().then((response) {
+      widget.postDelete(response);
+    });
   }
 
   void showAddItemDialog() {
