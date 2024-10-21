@@ -63,21 +63,29 @@ class _InvoiceDialogState extends State<InvoiceDialog> {
         .map((invoiceItem) => DataRow(
               cells: [
                 DataCell(
-                  const Icon(Icons.edit),
+                  Text(invoiceItem.quantity.toString()),
                   onTap: () {
                     showEditItemDialog(invoiceItem);
                   },
                 ),
-                DataCell(Text(invoiceItem.quantity.toString())),
-                DataCell(Text(invoiceItem.description)),
-                DataCell(Text(invoiceItem.unitPrice.toString())),
+                DataCell(
+                  Text(invoiceItem.description),
+                  onTap: () {
+                    showEditItemDialog(invoiceItem);
+                  },
+                ),
+                DataCell(
+                  Text(invoiceItem.unitPrice.toString()),
+                  onTap: () {
+                    showEditItemDialog(invoiceItem);
+                  },
+                ),
                 DataCell(Text(invoiceItem.amount.toString())),
               ],
             ))
         .toList();
     rows.add(DataRow(
       cells: [
-        const DataCell(Text("")),
         const DataCell(Text("")),
         const DataCell(Text("")),
         const DataCell(Text("")),
@@ -96,15 +104,19 @@ class _InvoiceDialogState extends State<InvoiceDialog> {
           title: Text("Payment Method: ${invoice.paymentMethod}"),
           trailing: Text("Date. ${invoice.date}"),
         ),
-        DataTable(
-          columns: const [
-            DataColumn(label: Text(""), numeric: true),
-            DataColumn(label: Text("Qty"), numeric: true),
-            DataColumn(label: Text("Description")),
-            DataColumn(label: Text("@"), numeric: true),
-            DataColumn(label: Text("Amount (K)"), numeric: true),
-          ],
-          rows: rows,
+        Center(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: const [
+                DataColumn(label: Text("Qty"), numeric: true),
+                DataColumn(label: Text("Description")),
+                DataColumn(label: Text("@"), numeric: true),
+                DataColumn(label: Text("Amount (K)"), numeric: true),
+              ],
+              rows: rows,
+            ),
+          ),
         ),
         ElevatedButton(
           onPressed: () {

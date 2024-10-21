@@ -1,10 +1,14 @@
 # myshop
-Make invoices, generate sales and create a closing book among other things.
+Generate quotations.
 
 # Invoicing
 ## Invoices page
-- a list of invoices
-- a create invoice modal or some kind of popup
+- list of invoices
+- create invoice modal
+- invoice modal
+- - add invoice item
+- - update invoice item
+- - delete invoice item
 
 # Data Types
 ## Invoices
