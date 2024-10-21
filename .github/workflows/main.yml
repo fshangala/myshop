@@ -34,7 +34,7 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-        #5 Setup Keystore
+        #5 Build APK
       - name: Build APK
         run: flutter build apk
 
@@ -47,6 +47,15 @@ jobs:
           cd build
           tar -czf ios_build.tar.gz ios
 
+        # Build web
+      - name: Build web
+        run: flutter build web
+      
+      - name: Updage pages artifacts
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: build/web
+
         #9 Upload Artifacts
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
@@ -55,3 +64,16 @@ jobs:
           path: |
             build/app/outputs/flutter-apk/app-release.apk
             build/ios_build.tar.gz
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${\{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v1
