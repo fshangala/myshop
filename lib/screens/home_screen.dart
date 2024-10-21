@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myshop/pages/home_page.dart';
 import 'package:myshop/pages/invoices_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,13 +14,10 @@ enum Pages {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var page = Pages.home;
+  var page = Pages.invoices;
 
   Widget renderPage(Pages page) {
     switch (page) {
-      case Pages.home:
-        return const HomePage();
-
       case Pages.invoices:
         return const InvoicesPage();
 
@@ -60,18 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               ListTile(
-                leading: const Icon(Icons.home),
-                title: const Text("Home"),
-                trailing:
-                    page == Pages.home ? const Icon(Icons.arrow_back) : null,
-                onTap: () {
-                  setState(() {
-                    page = Pages.home;
-                    Scaffold.of(context).closeDrawer();
-                  });
-                },
-              ),
-              ListTile(
+                leading: const Icon(Icons.receipt),
                 title: const Text("Invoices"),
                 trailing: page == Pages.invoices
                     ? const Icon(Icons.arrow_back)

@@ -56,9 +56,10 @@ class _InvoicesPageState extends State<InvoicesPage> {
       children: [
         Row(
           children: [
-            IconButton(
-              onPressed: () => addInvoiceSheet(),
+            ElevatedButton.icon(
+              label: const Text("Add Invoice"),
               icon: const Icon(Icons.add),
+              onPressed: () => addInvoiceSheet(),
             ),
           ],
         ),
